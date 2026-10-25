@@ -35,6 +35,42 @@ EventTarget.prototype.addEventListener=function(type,handler,opts){
   }
   return originalAdd.call(this,type,handler,opts)
 };
+
+function renderVialAddons(){
+  const ps=window.products||[];
+  const cart=JSON.parse(localStorage.getItem('pxm_cart')||'{}');
+  const vial=ps.some(p=>cart[p.id] && /vial|combination/i.test((p.name||'')+' '+(p.desc||'')));
+  let box=document.getElementById('addonBox');
+  const itemsEl=document.getElementById('cartItems');
+  if(!itemsEl) return;
+  if(!box){box=document.createElement('div');box.id='addonBox';itemsEl.insertAdjacentElement('afterend',box)}
+  if(!vial){box.innerHTML='';return}
+  const diluents=ps.filter(p=>p.category==='Diluents & Water');
+  const sets=ps.filter(p=>p.category==='Sets & Upgrades');
+  const group=(title,items)=>'<div style="margin-top:12px"><strong style="display:block;font-size:12px;color:#f5c5df;margin-bottom:7px">'+title+'</strong>'+items.map(p=>'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border:1px solid #50344d;border-radius:11px;background:#1b1023;margin-top:7px"><span style="font-size:12px">'+p.name+'<br><small>₱'+Number(p.price).toLocaleString('en-PH')+'</small></span><button class="btn secondary" style="padding:7px 10px;border-radius:9px;font-size:11px" onclick="addVialAddon(\\''+p.id+'\\')">Add to cart</button></div>').join('')+'</div>';
+  box.innerHTML='<div style="margin-top:18px;border:1px solid #68405f;background:#24152d;border-radius:16px;padding:15px"><h3 style="margin:0 0 5px;font-size:16px">Complete your order</h3><p style="margin:0 0 12px;color:#cdbdd3;font-size:12px;line-height:1.45">Your cart contains a vial. Would you like to add a diluent or set? Optional — nothing is added unless you choose it.</p>'+group('Diluents & Water',diluents)+group('Sets & Upgrades',sets)+'</div>';
+}
+
+window.addVialAddon=function(id){
+  const cart=JSON.parse(localStorage.getItem('pxm_cart')||'{}');
+  cart[id]=(cart[id]||0)+1;
+  localStorage.setItem('pxm_cart',JSON.stringify(cart));
+  if(typeof window.save==='function') window.save();
+  if(typeof window.openCart==='function') window.openCart();
+  setTimeout(renderVialAddons,0);
+};
+
+window.addEventListener('DOMContentLoaded',function(){
+  setTimeout(function(){
+    if(typeof window.openCart==='function' && !window.openCart.__vialAddonWrapped){
+      const originalOpenCart=window.openCart;
+      const wrapped=function(){originalOpenCart();setTimeout(renderVialAddons,0)};
+      wrapped.__vialAddonWrapped=true;
+      window.openCart=wrapped;
+    }
+    renderVialAddons();
+  },0);
+});
 })();</script>`
   html = html.replace('</head>', injected + '</head>')
   return new Response(html,{status:response.status,headers:response.headers})
