@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THE PINC PH × MINT — by Legit Sylph</title>
+<meta name="description" content="THE PINC PH × MINT by Legit Sylph">
+<style>
+:root{--p:#ff4fa3;--v:#8b5cf6;--bg:#160d1f;--card:#26152f;--line:#4b3453;--muted:#cdbdd3}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 15% 0,#421747,transparent 35%),radial-gradient(circle at 90% 10%,#42143e,transparent 30%),var(--bg);color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:1160px;margin:auto;padding:0 18px}.top{position:sticky;top:0;z-index:10;background:#160d1fe8;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav{height:68px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:900;letter-spacing:.04em}.brand b{background:linear-gradient(90deg,var(--p),#c084fc);-webkit-background-clip:text;color:transparent}.sub{font-size:10px;color:var(--muted);letter-spacing:.2em}
+.navlinks{display:flex;gap:18px;align-items:center}.navlinks a{color:var(--muted);text-decoration:none;font-size:14px}.cart{border:1px solid #714565;background:#2d1938;color:#fff;border-radius:999px;padding:10px 15px;font-weight:800}
+.hero{text-align:center;padding:78px 0 55px}.eyebrow{display:inline-block;border:1px solid #75466d;background:#29182f;border-radius:999px;padding:8px 13px;color:#f5c5df;font-size:11px;font-weight:800;letter-spacing:.12em}
+h1{font-size:clamp(38px,7vw,74px);line-height:1;margin:22px auto 16px}.grad{background:linear-gradient(90deg,#ff66ae,#c084fc,#ff66ae);-webkit-background-clip:text;color:transparent}
+.hero p{max-width:690px;margin:auto;color:var(--muted);font-size:16px;line-height:1.6}.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:26px}
+.btn{border:0;border-radius:13px;padding:12px 18px;font-weight:900;text-decoration:none;display:inline-block}.primary{background:linear-gradient(135deg,var(--p),var(--v));color:#fff}.secondary{background:#2b1935;border:1px solid #68405f;color:#fff}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:50px}.trust div{border:1px solid var(--line);border-radius:16px;padding:15px;text-align:center;color:var(--muted);font-size:13px}
+section{padding:32px 0}h2{font-size:30px;margin:0 0 8px}.intro{color:var(--muted);margin:0 0 20px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.filter{border:1px solid var(--line);background:#24152d;color:#d9c8df;padding:9px 13px;border-radius:999px}.filter.active{background:linear-gradient(135deg,var(--p),var(--v));color:#fff;border-color:transparent}
+.catalog-tools{display:grid;grid-template-columns:1fr;gap:12px;margin:20px 0 16px}
+.searchbox{position:relative}
+.searchbox input{width:100%;border:1px solid var(--line);background:#21132a;color:#fff;border-radius:14px;padding:13px 16px 13px 42px;font-size:15px;outline:none}
+.searchbox input:focus{border-color:#a75b9a;box-shadow:0 0 0 3px #ff4fa31a}
+.searchbox span{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#bda9c5;font-size:16px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0}
+.filter{white-space:nowrap;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.product{background:linear-gradient(180deg,#2c1936,#21132a);border:1px solid var(--line);border-radius:20px;padding:18px;display:flex;flex-direction:column;min-height:235px}.pill{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#f5b8da}.product h3{font-size:18px;margin:12px 0 6px}.product p{color:var(--muted);font-size:13px;line-height:1.5;min-height:38px}.price{font-size:21px;font-weight:950;margin:8px 0 13px}.product .btn{width:100%;margin-top:auto}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.info-card{border:1px solid var(--line);border-radius:18px;padding:20px;background:#21132a}.info-card h3{margin:0 0 8px}.info-card p{color:var(--muted);font-size:14px;line-height:1.55;margin:0}
+footer{border-top:1px solid var(--line);margin-top:50px;padding:28px 0 45px;color:var(--muted);font-size:12px;line-height:1.6}
+.modal-bg{display:none;position:fixed;inset:0;background:#000b;z-index:30;padding:18px;overflow:auto}.modal-bg.show{display:flex;align-items:center;justify-content:center}.modal{width:min(620px,100%);background:#21132a;border:1px solid #69425e;border-radius:22px;padding:21px;box-shadow:0 30px 80px #000}.modal-head{display:flex;justify-content:space-between;align-items:center}.close{background:none;border:0;color:#fff;font-size:28px}.field{margin:13px 0}.field label{display:block;font-size:12px;color:#d8c6de;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid #5b3b58;background:#160d1f;color:#fff;border-radius:11px;padding:11px}.field textarea{min-height:80px}.cart-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #3d2941;padding:11px 0}.qty{display:flex;gap:6px;align-items:center}.qty button{width:28px;height:28px;border-radius:8px;border:1px solid #5a3a56;background:#2d1a37;color:#fff}.total{font-size:20px;font-weight:900;margin:16px 0}.orderbox{background:#160d1f;border:1px solid #50344d;border-radius:14px;padding:14px;margin:14px 0;white-space:pre-wrap;color:#eaddeb;font-size:13px;line-height:1.5}.note{font-size:11px;color:#a995ae;line-height:1.5}.hidden{display:none}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.info{grid-template-columns:1fr}.navlinks a{display:none}}@media(max-width:520px){.grid,.trust{grid-template-columns:1fr}.hero{padding-top:55px}}
+</style>
+</head>
+<body>
+<header class="top"><nav class="wrap">
+<a href="#top" style="text-decoration:none;color:#fff"><div class="brand">THE <b>PINC PH × MINT</b><div class="sub">BY LEGIT SYLPH</div></div></a>
+<div class="navlinks"><a href="#shop">Shop</a><a href="#how">How it works</a><a href="#contact">Contact</a><button class="cart" onclick="openCart()">Cart <span id="count">0</span></button></div>
+</nav></header>
+
+<main id="top">
+<section class="hero wrap">
+<div class="eyebrow">ON-HAND • DISCREET • NATIONWIDE</div>
+<h1>Simple ordering.<br><span class="grad">Clean experience.</span></h1>
+<p>Shop available products and supplies from THE PINC PH × MINT by Legit Sylph. Build one cart, submit your details, then copy the generated order and send it through WhatsApp.</p>
+<div class="actions"><a class="btn primary" href="#shop">Shop now</a><button class="btn secondary" onclick="openCart()">View cart</button></div>
+</section>
+
+<section class="wrap trust"><div>✓ FREE J&T SHIPPING nationwide</div><div>✓ Lalamove option available</div><div>✓ GCash • MariBank • GoTyme</div></section>
+
+<section class="wrap" id="shop">
+<h2>Shop the catalog</h2><p class="intro">Browse the full catalog by category or search by product name, type, or keyword. Prices are shown in Philippine pesos.</p>
+<div class="catalog-tools">
+<div class="searchbox"><span>⌕</span><input id="search" type="search" placeholder="Search products, categories, or keywords…" autocomplete="off"></div>
+<div class="filters" id="filters"></div>
+</div>
+<div class="grid" id="products"></div>
+<p id="empty" class="note hidden" style="margin-top:18px">No products match your search.</p>
+</section>
+
+<section class="wrap" id="how"><h2>How ordering works</h2><p class="intro">A straightforward checkout flow.</p><div class="info">
+<div class="info-card"><h3>01 — Build your cart</h3><p>Select products, quantities and supplies. Everything stays together as one order.</p></div>
+<div class="info-card"><h3>02 — Submit details</h3><p>Enter your name, WhatsApp/mobile, email and complete delivery address including barangay.</p></div>
+<div class="info-card"><h3>03 — Confirm payment</h3><p>Your order details are generated so you can copy them and send them to WhatsApp for payment coordination.</p></div>
+</div></section>
+
+<section class="wrap" id="contact"><h2>Need help?</h2><p class="intro">For order questions or manual orders, contact Legit Sylph directly.</p>
+<div class="actions" style="justify-content:flex-start"><a class="btn primary" href="https://wa.me/6391786028053" target="_blank">WhatsApp 0917 860 2853</a><a class="btn secondary" href="mailto:grim.sylph.peppers@gmail.com">Email us</a></div></section>
+</main>
+
+<footer><div class="wrap"><strong>THE PINC PH × MINT</strong> by Legit Sylph<br>100% Legit • ONHAND • Trusted • Safe • Discreet<br><br><span>Prices and availability are subject to confirmation. No COD. Product information on this storefront is not medical advice.</span></div></footer>
+
+<div class="modal-bg" id="cartModal"><div class="modal"><div class="modal-head"><h2>Your cart</h2><button class="close" onclick="closeCart()">×</button></div><div id="cartItems"></div><div class="total" id="total">Total: ₱0</div><button class="btn primary" style="width:100%" onclick="checkout()">Proceed to checkout</button></div></div>
+
+<div class="modal-bg" id="checkoutModal"><div class="modal"><div class="modal-head"><h2>Checkout</h2><button class="close" onclick="closeCheckout()">×</button></div>
+<form id="form">
+<div class="field"><label>Full name *</label><input id="name" required></div>
+<div class="field"><label>Mobile / WhatsApp *</label><input id="mobile" required></div>
+<div class="field"><label>Email *</label><input id="email" type="email" required></div>
+<div class="field"><label>Delivery *</label><select id="delivery"><option>J&T — FREE nationwide</option><option>Lalamove — ₱50 off</option></select></div>
+<div class="field"><label>Complete delivery address incl. barangay *</label><textarea id="address" required></textarea></div>
+<div class="field"><label>Notes</label><textarea id="notes"></textarea></div>
+<button class="btn primary" style="width:100%">Create order</button>
+</form>
+<div id="result" class="hidden"><div class="eyebrow">ORDER CREATED</div><div class="orderbox" id="orderText"></div><button class="btn primary" style="width:100%" onclick="copyOrder()">Copy order details</button><a id="wa" class="btn secondary" style="display:block;text-align:center;margin-top:10px" target="_blank">Send via WhatsApp</a><p class="note">Keep your order number. Payment confirmation and final availability are handled manually.</p></div>
+</div></div>
+
+<script>
+const products=[{"id":"t15","name":"Tirzepatide 15 mg","price":1499,"category":"Weight Management","desc":"15 mg vial"},{"id":"t30","name":"Tirzepatide 30 mg","price":1699,"category":"Weight Management","desc":"30 mg vial"},{"id":"t60","name":"Tirzepatide 60 mg","price":2099,"category":"Weight Management","desc":"60 mg vial"},{"id":"r10","name":"Retatrutide 10 mg","price":1199,"category":"Weight Management","desc":"10 mg vial"},{"id":"r15","name":"Retatrutide 15 mg","price":1499,"category":"Weight Management","desc":"15 mg vial"},{"id":"c5","name":"Cagrilintide 5 mg","price":1199,"category":"Weight Management","desc":"5 mg vial"},{"id":"e5","name":"Eloralintide 5 mg","price":1799,"category":"Weight Management","desc":"5 mg vial"},{"id":"rc10","name":"Reta + Cagri (10 mg)","price":1699,"category":"Weight Management","desc":"Combination vial"},{"id":"semax","name":"Semax 10 mg","price":999,"category":"Cognitive & Sleep","desc":"10 mg vial"},{"id":"selank","name":"Selank 10 mg","price":999,"category":"Cognitive & Sleep","desc":"10 mg vial"},{"id":"selsmx","name":"Selank + Semax 10 mg","price":1099,"category":"Cognitive & Sleep","desc":"Combination vial"},{"id":"dsip","name":"DSIP 10 mg","price":1099,"category":"Cognitive & Sleep","desc":"10 mg vial"},{"id":"aod","name":"AOD ProMax 5 mg","price":1199,"category":"Fat Loss & Metabolic Enhancement","desc":"5 mg vial"},{"id":"amino1mq","name":"5-Amino 1MQ 50 mg","price":1199,"category":"Fat Loss & Metabolic Enhancement","desc":"50 mg vial"},{"id":"lemon","name":"Lemon Bottle 10 mL","price":950,"category":"Fat Loss & Metabolic Enhancement","desc":"10 mL"},{"id":"ghk50","name":"GHK-Cu 50 mg","price":899,"category":"Energy, Tissue Repair, Healing, Skin Regeneration","desc":"50 mg vial"},{"id":"klow","name":"KLOW 80 mg","price":1799,"category":"Energy, Tissue Repair, Healing, Skin Regeneration","desc":"80 mg blend"},{"id":"ghkkpv","name":"GHK-KPV 60 mg","price":1299,"category":"Energy, Tissue Repair, Healing, Skin Regeneration","desc":"60 mg blend"},{"id":"kpv","name":"KPV 10 mg","price":999,"category":"Energy, Tissue Repair, Healing, Skin Regeneration","desc":"10 mg vial"},{"id":"nad","name":"NAD+ 1000 mg","price":1449,"category":"Energy, Tissue Repair, Healing, Skin Regeneration","desc":"1000 mg vial"},{"id":"wolverine","name":"Wolverine (TB500 10 mg + BPC-157 10 mg)","price":1999,"category":"Energy, Tissue Repair, Healing, Skin Regeneration","desc":"20 mg combination"},{"id":"kiss","name":"Kisspeptin 10 mg","price":1199,"category":"Reproductive Health","desc":"10 mg vial"},{"id":"pt141","name":"PT-141 10 mg","price":999,"category":"Reproductive Health","desc":"10 mg vial"},{"id":"gluta","name":"Korean Glutathione (Glutaone) 1200 mg","price":599,"category":"Antioxidants","desc":"1200 mg"},{"id":"saluta","name":"Saluta 600 mg","price":650,"category":"Antioxidants","desc":"600 mg"},{"id":"pdrn","name":"PDRN Topical 1 g","price":850,"category":"Aesthetic Ampoules & Topicals","desc":"1 g topical"},{"id":"lucchini","name":"Lucchini Gold Ampule","price":250,"category":"Aesthetic Ampoules & Topicals","desc":"Ampule"},{"id":"saicorvic","name":"Saicorvic Ampule","price":50,"category":"Aesthetic Ampoules & Topicals","desc":"Ampule"},{"id":"sp-clear","name":"Clear Green","price":850,"category":"Spicules / Microneedling Sponge","desc":"Spicule / microneedling sponge"},{"id":"sp-control","name":"Pinc Control","price":850,"category":"Spicules / Microneedling Sponge","desc":"Spicule / microneedling sponge"},{"id":"sp-white","name":"White Bright","price":850,"category":"Spicules / Microneedling Sponge","desc":"Spicule / microneedling sponge"},{"id":"sp-purple","name":"Purple Renew","price":850,"category":"Spicules / Microneedling Sponge","desc":"Spicule / microneedling sponge"},{"id":"sp-blue","name":"Blue Balance","price":850,"category":"Spicules / Microneedling Sponge","desc":"Spicule / microneedling sponge"},{"id":"sp-black","name":"Black Purify","price":850,"category":"Spicules / Microneedling Sponge","desc":"Spicule / microneedling sponge"},{"id":"sp-brown","name":"Brown Restore","price":650,"category":"Spicules / Microneedling Sponge","desc":"Spicule / microneedling sponge"},{"id":"b3","name":"3 mL Bacwater","price":99,"category":"Diluents & Water","desc":"3 mL"},{"id":"b5","name":"5 mL Bacwater","price":120,"category":"Diluents & Water","desc":"5 mL"},{"id":"b10","name":"10 mL Bacwater","price":140,"category":"Diluents & Water","desc":"10 mL"},{"id":"pbamp","name":"10 mL Pharma Bac Ampule","price":150,"category":"Diluents & Water","desc":"10 mL"},{"id":"sw10","name":"10 mL Sterile Water","price":40,"category":"Diluents & Water","desc":"10 mL"},{"id":"pes1","name":"PES Filter — Per Piece","price":40,"category":"Filters & Cartridges","desc":"1 piece"},{"id":"pes10","name":"PES Filter — 10 pcs","price":350,"category":"Filters & Cartridges","desc":"10 pieces"},{"id":"steam1","name":"Steamed Cartridge — Per Piece","price":40,"category":"Filters & Cartridges","desc":"1 piece"},{"id":"steam10","name":"Steamed Cartridge — 10 pcs","price":350,"category":"Filters & Cartridges","desc":"10 pieces"},{"id":"card23","name":"Cardinal 23G × 1” (3 mL) — 10 pc","price":110,"category":"Needles & Syringes","desc":"10 pieces"},{"id":"partner23","name":"Partners 23G × 1” (3 mL) — 10 pc","price":110,"category":"Needles & Syringes","desc":"10 pieces"},{"id":"terumo25","name":"Terumo Agani 25G × 1” — 10 pc","price":125,"category":"Needles & Syringes","desc":"10 pieces"},{"id":"sureguard29","name":"SureGuard Insulin Syringe 29G 5/8” (1 mL) — 10 pc","price":100,"category":"Needles & Syringes","desc":"10 pieces"},{"id":"lifeward29","name":"Lifeward 29G × 1” (1 mL) — 10 pcs","price":150,"category":"Needles & Syringes","desc":"10 pieces"},{"id":"pp10","name":"Purple/Pink Syringes — 10 pcs","price":110,"category":"Needles & Syringes","desc":"10 pieces"},{"id":"ppbox","name":"Purple/Pink Syringes — 1 Box","price":650,"category":"Needles & Syringes","desc":"1 box"},{"id":"set-complete","name":"Complete Set Upgrade","price":200,"category":"Sets & Upgrades","desc":"Reconstitution syringe + 6 insulin syringes + 12 alcohol pads + kraft box"},{"id":"set-pen","name":"Complete Pen Set Upgrade","price":200,"category":"Sets & Upgrades","desc":"2 reconstitution syringes + 6 pen needles + 12 alcohol pads + kraft box"},{"id":"set-30","name":"30 Day Set Upgrade","price":350,"category":"Sets & Upgrades","desc":"30 insulin syringes + 30 alcohol pads + reconstitution syringe"},{"id":"set-1m","name":"1M Set Upgrade","price":250,"category":"Sets & Upgrades","desc":"15 insulin syringes + 15 1” needles + 16 alcohol pads + reconstitution syringe"}];
+let cart=JSON.parse(localStorage.getItem('pxm_cart')||'{}'),filter='all',latest='',searchTerm='';
+const money=n=>'₱'+n.toLocaleString('en-PH');
+const categoryOrder=['Weight Management','Cognitive & Sleep','Fat Loss & Metabolic Enhancement','Energy, Tissue Repair, Healing, Skin Regeneration','Reproductive Health','Antioxidants','Aesthetic Ampoules & Topicals','Spicules / Microneedling Sponge','Diluents & Water','Filters & Cartridges','Needles & Syringes','Sets & Upgrades'];
+const productsEl=document.getElementById('products');
+const filtersEl=document.getElementById('filters');
+const emptyEl=document.getElementById('empty');
+function save(){localStorage.setItem('pxm_cart',JSON.stringify(cart));document.getElementById('count').textContent=Object.values(cart).reduce((a,b)=>a+b,0)}
+function total(){return products.reduce((s,p)=>s+(cart[p.id]||0)*p.price,0)}
+function renderFilters(){
+  filtersEl.innerHTML='<button class="filter active" data-f="all">All</button>'+categoryOrder.map(c=>`<button class="filter" data-f="${c}">${c}</button>`).join('');
+  document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{filter=b.dataset.f;render()});
+}
+function render(){
+  const q=searchTerm.trim().toLowerCase();
+  const visible=products.filter(p=>{
+    const categoryOK=filter==='all'||p.category===filter;
+    const searchOK=!q||`${p.name} ${p.desc} ${p.category}`.toLowerCase().includes(q);
+    return categoryOK&&searchOK;
+  });
+  productsEl.innerHTML=visible.map(p=>`<article class="product"><div class="pill">${p.category}</div><h3>${p.name}</h3><p>${p.desc}</p><div class="price">${money(p.price)}</div><button class="btn primary" onclick="add('${p.id}')">Add to cart</button></article>`).join('');
+  emptyEl.classList.toggle('hidden',visible.length!==0);
+  document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.f===filter));
+}
+function add(id){cart[id]=(cart[id]||0)+1;save();openCart()}
+function cartHTML(){let a=products.filter(p=>cart[p.id]);if(!a.length)return '<p class="note">Your cart is empty.</p>';return a.map(p=>`<div class="cart-row"><div><b>${p.name}</b><br><small>${money(p.price)} each</small></div><div class="qty"><button onclick="changeQty('${p.id}',-1)">−</button><span>${cart[p.id]}</span><button onclick="changeQty('${p.id}',1)">+</button></div></div>`).join('')}
+function changeQty(id,d){cart[id]=(cart[id]||0)+d;if(cart[id]<=0)delete cart[id];save();openCart()}
+function openCart(){document.getElementById('cartItems').innerHTML=cartHTML();document.getElementById('total').textContent='Total: '+money(total());document.getElementById('cartModal').classList.add('show')}
+function closeCart(){document.getElementById('cartModal').classList.remove('show')}
+function checkout(){if(!Object.keys(cart).length)return alert('Your cart is empty.');closeCart();document.getElementById('form').classList.remove('hidden');document.getElementById('result').classList.add('hidden');document.getElementById('checkoutModal').classList.add('show')}
+function closeCheckout(){document.getElementById('checkoutModal').classList.remove('show')}
+function orderNo(){let d=new Date();return 'PXM-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.random().toString(36).slice(2,7).toUpperCase()}
+document.getElementById('form').addEventListener('submit',e=>{e.preventDefault();let lines=products.filter(p=>cart[p.id]).map(p=>`${p.name} × ${cart[p.id]} = ${money(p.price*cart[p.id])}`).join('\n');latest=`ORDER ${orderNo()}\n\nCustomer: ${name.value}\nMobile/WhatsApp: ${mobile.value}\nEmail: ${email.value}\nDelivery: ${delivery.value}\nAddress: ${address.value}\n\nITEMS\n${lines}\n\nTOTAL: ${money(total())}\nNotes: ${notes.value||'None'}`;orderText.textContent=latest;wa.href='https://wa.me/6391786028053?text='+encodeURIComponent(latest);form.classList.add('hidden');result.classList.remove('hidden');cart={};localStorage.removeItem('pxm_cart');save()});
+async function copyOrder(){try{await navigator.clipboard.writeText(latest);alert('Order details copied.')}catch(e){alert('Copy was blocked. Please copy the text manually.')}}
+document.getElementById('search').addEventListener('input',e=>{searchTerm=e.target.value;render()});
+renderFilters();save();render();
+</script>
+</body>
+</html>
