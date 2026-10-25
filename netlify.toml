@@ -8,3 +8,5 @@
 [[edge_functions]]
   function = "storefront"
   path = "/"
+
+# store backend + storefront edge integration
