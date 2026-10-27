@@ -1,1 +1,1 @@
-{"name":"the-pinc-ph-mint","private":true,"dependencies":{"@netlify/database":"latest","@netlify/functions":"latest"},"engines":{"node":">=18"}}
+{"name":"the-pinc-ph-mint","private":true,"dependencies":{"@vercel/blob":"latest","@netlify/database":"latest","@netlify/functions":"latest"},"engines":{"node":">=18"}}
