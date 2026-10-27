@@ -1,1 +1,160 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>THE PINC PH × MINT Admin</title><style>:root{--p:#ff4fa3;--v:#8b5cf6;--bg:#160d1f;--card:#26152f;--line:#4b3453;--muted:#cdbdd3}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:system-ui;padding:18px}.wrap{max-width:1200px;margin:auto}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tabs button,button{border:0;border-radius:9px;padding:9px 12px;background:#352044;color:#fff;font-weight:800;cursor:pointer}.primary{background:linear-gradient(135deg,var(--p),var(--v))}.field{margin:8px 0}.field input,.field select{width:100%;background:#160d1f;color:#fff;border:1px solid var(--line);border-radius:8px;padding:9px}.table{overflow:auto}.table table{width:100%;border-collapse:collapse}.table th,.table td{padding:8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}.muted{color:var(--muted)}.hidden{display:none}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:700px){.cards{grid-template-columns:1fr}}.error{color:#ff9acb}.ok{color:#b9ffda}</style></head><body><main class="wrap"><div id="login" class="card"><h1>THE PINC PH × MINT Admin</h1><p class="muted">Sign in with your admin username and password.</p><div class="field"><label>Username</label><input id="username" autocomplete="username" value="admin"></div><div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password"></div><button class="primary" onclick="login()">Enter dashboard</button><p id="err" class="error"></p></div><div id="app" class="hidden"><div class="card"><h2>Store dashboard</h2><p id="state" class="muted">Products • Inventory • Orders • Promos • Reviews • Reports</p><div class="tabs"><button class="primary" onclick="show('overview')">Overview</button><button onclick="show('products')">Products</button><button onclick="show('orders')">Orders</button><button onclick="show('promos')">Promos</button><button onclick="show('reviews')">Reviews</button><button onclick="show('reports')">Reports</button><button onclick="logout()">Log out</button></div></div><section id="overview"></section><section id="products" class="hidden"></section><section id="orders" class="hidden"></section><section id="promos" class="hidden"></section><section id="reviews" class="hidden"></section><section id="reports" class="hidden"></section></div></main><script>let auth=localStorage.getItem('pxm_admin_auth')||'',data={};const $=id=>document.getElementById(id),money=n=>'₱'+Number(n||0).toLocaleString('en-PH');async function api(action,opts={}){let method=opts.method||'GET',url='/api/store'+(method==='GET'?'?action='+encodeURIComponent(action):'');let headers={'content-type':'application/json'};if(auth)headers.authorization='Basic '+auth;let r=await fetch(url,{method,headers,body:method==='GET'?undefined:JSON.stringify({action,...(opts.body||{})})});let text=await r.text(),j;try{j=JSON.parse(text)}catch(e){throw Error('The Vercel API returned a non-JSON response ('+r.status+').')};if(!r.ok)throw Error(j.error||('Request failed ('+r.status+')'));return j}async function login(){const u=$('username').value.trim(),p=$('password').value;auth=btoa(u+':'+p);try{await api('orders');localStorage.setItem('pxm_admin_auth',auth);$('login').classList.add('hidden');$('app').classList.remove('hidden');await load();show('overview')}catch(e){auth='';$('err').textContent=e.message}}function logout(){localStorage.removeItem('pxm_admin_auth');location.reload()}async function load(){data.products=await api('products');data.orders=await api('orders');data.promos=await api('promos');data.reviews=await api('reviews');data.report=await api('report')}function show(id){['overview','products','orders','promos','reviews','reports'].forEach(x=>$(x).classList.toggle('hidden',x!==id));if(id==='overview')$('overview').innerHTML='<div class="cards"><div class="card"><div class="muted">Orders</div><h2>'+data.report.summary.orders+'</h2></div><div class="card"><div class="muted">Sales</div><h2>'+money(data.report.summary.sales)+'</h2></div><div class="card"><div class="muted">Low stock ≤2</div><h2>'+data.products.filter(p=>p.stock!==null&&p.stock<=2&&p.active).length+'</h2></div></div>';if(id==='products')$('products').innerHTML='<div class="card"><h2>Products & inventory</h2><div class="table"><table><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Active</th><th></th></tr>'+data.products.map(p=>'<tr><td>'+p.name+'</td><td>'+p.category+'</td><td>'+money(p.price)+'</td><td><input id="s-'+p.id+'" value="'+(p.stock??'')+'" style="width:65px"></td><td><input type="checkbox" id="a-'+p.id+'" '+(p.active?'checked':'')+'></td><td><button onclick="saveProduct(\''+p.id+'\')">Save</button></td></tr>').join('')+'</table></div></div>';if(id==='orders')$('orders').innerHTML='<div class="card"><h2>Orders</h2><div class="table"><table><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th></th></tr>'+data.orders.map(o=>'<tr><td>'+o.order_no+'</td><td>'+o.customer_name+'<br>'+o.mobile+'</td><td>'+money(o.total)+'</td><td><select id="st-'+o.order_no+'"><option>'+o.status+'</option><option>Unpaid / Unconfirmed</option><option>Payment Confirmed</option><option>Pending</option><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option></select></td><td><button onclick="pay(\''+o.order_no+'\')">Confirm payment</button> <button onclick="status(\''+o.order_no+'\')">Save</button></td></tr>').join('')+'</table></div></div>';if(id==='promos')$('promos').innerHTML='<div class="card"><h2>Promo codes</h2><div class="cards"><div class="field"><label>Code</label><input id="pc"></div><div class="field"><label>Type</label><select id="pt"><option value="percent">Percent</option><option value="fixed">Fixed ₱</option></select></div><div class="field"><label>Amount</label><input id="pa" type="number"></div></div><button class="primary" onclick="promo()">Save promo</button><div class="table"><table><tr><th>Code</th><th>Discount</th><th>Active</th></tr>'+data.promos.map(p=>'<tr><td>'+p.code+'</td><td>'+p.amount+(p.discount_type==='percent'?'%':' ₱')+'</td><td>'+p.active+'</td></tr>').join('')+'</table></div></div>';if(id==='reviews')$('reviews').innerHTML='<div class="card"><h2>Reviews</h2><div class="table"><table><tr><th>Order</th><th>Product</th><th>Rating</th><th>Review</th><th></th></tr>'+data.reviews.map(r=>'<tr><td>'+r.order_no+'</td><td>'+r.product_name+'</td><td>'+r.rating+'/5</td><td>'+r.review_text+'</td><td><button onclick="approve('+r.id+','+(!r.approved)+')">'+(r.approved?'Hide':'Approve')+'</button></td></tr>').join('')+'</table></div></div>';if(id==='reports')$('reports').innerHTML='<div class="card"><h2>Sales report</h2><p>Last 30 days: '+data.report.summary.orders+' orders, '+money(data.report.summary.sales)+' sales.</p><div class="table"><table><tr><th>Date</th><th>Orders</th><th>Sales</th></tr>'+data.report.byDate.map(x=>'<tr><td>'+x.day+'</td><td>'+x.orders+'</td><td>'+money(x.sales)+'</td></tr>').join('')+'</table></div></div>'}async function saveProduct(id){let p=data.products.find(x=>x.id===id);await api('update_product',{method:'POST',body:{product:{...p,stock:$('s-'+id).value,active:$('a-'+id).checked}}});await load();show('products')}async function pay(no){await api('update_order',{method:'POST',body:{order_no:no,payment_confirmed:true}});await load();show('orders')}async function status(no){await api('update_order',{method:'POST',body:{order_no:no,status:$('st-'+no).value}});await load();show('orders')}async function promo(){await api('create_promo',{method:'POST',body:{promo:{code:$('pc').value,discount_type:$('pt').value,amount:$('pa').value}}});await load();show('promos')}async function approve(id,approved){await api('approve_review',{method:'POST',body:{id,approved}});await load();show('reviews')}if(auth){api('orders').then(()=>{login()}).catch(()=>{localStorage.removeItem('pxm_admin_auth');auth=''})}</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THE PINC PH × MINT Admin</title>
+<style>
+:root{--p:#ff4fa3;--v:#8b5cf6;--bg:#160d1f;--card:#26152f;--line:#4b3453;--muted:#cdbdd3}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:system-ui,-apple-system,sans-serif;padding:18px}
+.wrap{max-width:1200px;margin:auto}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+button{border:0;border-radius:9px;padding:10px 13px;background:#352044;color:#fff;font-weight:800;cursor:pointer}
+button:hover{filter:brightness(1.15)}button:disabled{opacity:.5;cursor:not-allowed}.primary{background:linear-gradient(135deg,var(--p),var(--v))}
+.field{margin:10px 0}.field input,.field select{width:100%;background:#160d1f;color:#fff;border:1px solid var(--line);border-radius:8px;padding:10px}
+.table{overflow:auto}.table table{width:100%;border-collapse:collapse}.table th,.table td{padding:8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}
+.muted{color:var(--muted)}.hidden{display:none}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.error{color:#ff9acb}.ok{color:#b9ffda}
+.modal{position:fixed;inset:0;background:#0009;display:flex;align-items:center;justify-content:center;padding:18px;z-index:10}
+.modalbox{width:min(480px,100%);background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}@media(max-width:700px){.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div id="login" class="card">
+    <h1>THE PINC PH × MINT Admin</h1>
+    <p class="muted">Sign in with your admin username and password.</p>
+    <div class="field"><label>Username</label><input id="username" autocomplete="username" value="admin"></div>
+    <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password"></div>
+    <button id="loginBtn" class="primary">Enter dashboard</button>
+    <p id="err" class="error"></p>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="card">
+      <h2>Store dashboard</h2>
+      <p id="state" class="muted">Products • Inventory • Orders • Promos • Reviews • Reports</p>
+      <div class="tabs actions">
+        <button class="primary" data-view="overview">Overview</button>
+        <button data-view="products">Products / Inventory</button>
+        <button data-view="orders">Orders</button>
+        <button data-view="promos">Promos</button>
+        <button data-view="reviews">Reviews</button>
+        <button data-view="reports">Reports</button>
+        <button id="passwordBtn">Change password</button>
+        <button id="logoutBtn">Log out</button>
+      </div>
+    </div>
+    <section id="overview"></section>
+    <section id="products" class="hidden"></section>
+    <section id="orders" class="hidden"></section>
+    <section id="promos" class="hidden"></section>
+    <section id="reviews" class="hidden"></section>
+    <section id="reports" class="hidden"></section>
+  </div>
+</main>
+
+<div id="passwordModal" class="modal hidden">
+  <div class="modalbox">
+    <h2>Change admin password</h2>
+    <p class="muted">Enter your previous password, then choose the new password.</p>
+    <div class="field"><label>Previous password</label><input id="oldPassword" type="password" autocomplete="current-password"></div>
+    <div class="field"><label>New password</label><input id="newPassword" type="password" autocomplete="new-password"></div>
+    <div class="field"><label>Confirm new password</label><input id="confirmPassword" type="password" autocomplete="new-password"></div>
+    <p id="passwordMsg" class="error"></p>
+    <div class="actions">
+      <button id="changePasswordBtn" class="primary">Change password</button>
+      <button id="cancelPasswordBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let auth=localStorage.getItem('pxm_admin_auth')||'';
+let data={};
+const $=id=>document.getElementById(id);
+const money=n=>'₱'+Number(n||0).toLocaleString('en-PH');
+const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function basic(u,p){return btoa(unescape(encodeURIComponent(u+':'+p)));}
+async function api(action,opts={}){
+  const method=opts.method||'GET';
+  const url='/api/store'+(method==='GET'?'?action='+encodeURIComponent(action):'');
+  const headers={'content-type':'application/json'};
+  if(auth) headers.authorization='Basic '+auth;
+  const r=await fetch(url,{method,headers,body:method==='GET'?undefined:JSON.stringify({action,...(opts.body||{})})});
+  const text=await r.text();
+  let j; try{j=JSON.parse(text)}catch{throw Error('The Vercel API returned a non-JSON response ('+r.status+').')}
+  if(!r.ok) throw Error(j.error||('Request failed ('+r.status+')'));
+  return j;
+}
+async function load(){
+  data.products=await api('products');
+  data.orders=await api('orders');
+  data.promos=await api('promos');
+  data.reviews=await api('reviews');
+  data.report=await api('report');
+}
+async function loginWithCredentials(){
+  const u=$('username').value.trim(),p=$('password').value;
+  if(!u||!p){$('err').textContent='Enter your username and password.';return}
+  auth=basic(u,p);$('loginBtn').disabled=true;$('err').textContent='';
+  try{
+    await api('orders');
+    localStorage.setItem('pxm_admin_auth',auth);
+    $('password').value='';$('login').classList.add('hidden');$('app').classList.remove('hidden');
+    await load();show('overview');
+  }catch(e){auth='';$('err').textContent=e.message}
+  finally{$('loginBtn').disabled=false}
+}
+function logout(){localStorage.removeItem('pxm_admin_auth');auth='';location.reload()}
+function show(id){
+  ['overview','products','orders','promos','reviews','reports'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
+  if(id==='overview')$('overview').innerHTML='<div class="cards"><div class="card"><div class="muted">Orders</div><h2>'+data.report.summary.orders+'</h2></div><div class="card"><div class="muted">Sales</div><h2>'+money(data.report.summary.sales)+'</h2></div><div class="card"><div class="muted">Low stock ≤2</div><h2>'+data.products.filter(p=>p.stock!==null&&p.stock<=2&&p.active).length+'</h2></div></div>';
+  if(id==='products')renderProducts();if(id==='orders')renderOrders();if(id==='promos')renderPromos();if(id==='reviews')renderReviews();if(id==='reports')renderReports();
+}
+function renderProducts(){
+  $('products').innerHTML='<div class="card"><h2>Products & inventory</h2><div class="table"><table><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Active</th><th></th></tr>'+data.products.map((p,i)=>'<tr><td>'+escapeHtml(p.name)+'</td><td>'+escapeHtml(p.category)+'</td><td>'+money(p.price)+'</td><td><input id="stock-'+i+'" value="'+escapeHtml(p.stock??'')+'" style="width:65px"></td><td><input type="checkbox" id="active-'+i+'" '+(p.active?'checked':'')+'></td><td><button data-save-index="'+i+'">Save</button></td></tr>').join('')+'</table></div></div>';
+  $('products').querySelectorAll('[data-save-index]').forEach(b=>b.addEventListener('click',()=>saveProduct(Number(b.dataset.saveIndex))));
+}
+function renderOrders(){
+  $('orders').innerHTML='<div class="card"><h2>Orders</h2><div class="table"><table><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th></th></tr>'+data.orders.map((o,i)=>'<tr><td>'+escapeHtml(o.order_no)+'</td><td>'+escapeHtml(o.customer_name)+'<br>'+escapeHtml(o.mobile)+'</td><td>'+money(o.total)+'</td><td><select id="status-'+i+'"><option>'+escapeHtml(o.status)+'</option><option>Unpaid / Unconfirmed</option><option>Payment Confirmed</option><option>Pending</option><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option></select></td><td><div class="actions"><button data-pay-index="'+i+'">Confirm payment</button><button data-status-index="'+i+'">Save</button></div></td></tr>').join('')+'</table></div></div>';
+  $('orders').querySelectorAll('[data-pay-index]').forEach(b=>b.addEventListener('click',()=>pay(data.orders[Number(b.dataset.payIndex)].order_no)));
+  $('orders').querySelectorAll('[data-status-index]').forEach(b=>b.addEventListener('click',()=>saveStatus(Number(b.dataset.statusIndex))));
+}
+function renderPromos(){
+  $('promos').innerHTML='<div class="card"><h2>Promo codes</h2><div class="cards"><div class="field"><label>Code</label><input id="pc"></div><div class="field"><label>Type</label><select id="pt"><option value="percent">Percent</option><option value="fixed">Fixed ₱</option></select></div><div class="field"><label>Amount</label><input id="pa" type="number"></div></div><button id="promoBtn" class="primary">Save promo</button><div class="table"><table><tr><th>Code</th><th>Discount</th><th>Active</th></tr>'+data.promos.map(p=>'<tr><td>'+escapeHtml(p.code)+'</td><td>'+escapeHtml(p.amount)+(p.discount_type==='percent'?'%':' ₱')+'</td><td>'+escapeHtml(p.active)+'</td></tr>').join('')+'</table></div></div>';
+  $('promoBtn').addEventListener('click',promo);
+}
+function renderReviews(){
+  $('reviews').innerHTML='<div class="card"><h2>Reviews</h2><div class="table"><table><tr><th>Order</th><th>Product</th><th>Rating</th><th>Review</th><th></th></tr>'+data.reviews.map((r,i)=>'<tr><td>'+escapeHtml(r.order_no)+'</td><td>'+escapeHtml(r.product_name)+'</td><td>'+escapeHtml(r.rating)+'/5</td><td>'+escapeHtml(r.review_text)+'</td><td><button data-review-index="'+i+'">'+(r.approved?'Hide':'Approve')+'</button></td></tr>').join('')+'</table></div></div>';
+  $('reviews').querySelectorAll('[data-review-index]').forEach(b=>b.addEventListener('click',()=>approve(Number(b.dataset.reviewIndex))));
+}
+function renderReports(){
+  $('reports').innerHTML='<div class="card"><h2>Sales report</h2><p>Last 30 days: '+data.report.summary.orders+' orders, '+money(data.report.summary.sales)+' sales.</p><div class="table"><table><tr><th>Date</th><th>Orders</th><th>Sales</th></tr>'+data.report.byDate.map(x=>'<tr><td>'+escapeHtml(x.day)+'</td><td>'+x.orders+'</td><td>'+money(x.sales)+'</td></tr>').join('')+'</table></div></div>';
+}
+async function refresh(view){await load();show(view)}
+async function saveProduct(i){const p=data.products[i];await api('update_product',{method:'POST',body:{product:{...p,stock:$('stock-'+i).value,active:$('active-'+i).checked}}});await refresh('products')}
+async function pay(no){await api('update_order',{method:'POST',body:{order_no:no,payment_confirmed:true}});await refresh('orders')}
+async function saveStatus(i){await api('update_order',{method:'POST',body:{order_no:data.orders[i].order_no,status:$('status-'+i).value}});await refresh('orders')}
+async function promo(){await api('create_promo',{method:'POST',body:{promo:{code:$('pc').value.trim(),discount_type:$('pt').value,amount:$('pa').value}}});await refresh('promos')}
+async function approve(i){const r=data.reviews[i];await api('approve_review',{method:'POST',body:{id:r.id,approved:!r.approved}});await refresh('reviews')}
+function openPassword(){$('oldPassword').value='';$('newPassword').value='';$('confirmPassword').value='';$('passwordMsg').textContent='';$('passwordMsg').className='error';$('passwordModal').classList.remove('hidden')}
+function closePassword(){$('passwordModal').classList.add('hidden')}
+async function changePassword(){
+  const oldP=$('oldPassword').value,newP=$('newPassword').value,confirmP=$('confirmPassword').value;$('passwordMsg').textContent='';
+  if(!oldP||!newP){$('passwordMsg').textContent='Enter the previous and new passwords.';return}
+  if(newP.length<8){$('passwordMsg').textContent='New password must be at least 8 characters.';return}
+  if(newP!==confirmP){$('passwordMsg').textContent='New passwords do not match.';return}
+  $('changePasswordBtn').disabled=true;
+  try{
+    await api('change_password',{method:'POST',body:{previousPassword:oldP,newPassword:newP}});
+    const username=$('username').value.trim()||'admin';auth=basic(username,newP);localStorage.setItem('pxm_admin_auth',auth);
+    $('passwordMsg').className='ok';$('passwordMsg').textContent='Password changed successfully.';setTimeout(closePassword,700)
+  }catch(e){$('passwordMsg').className='error';$('passwordMsg').textContent=e.message}
+  finally{$('changePasswordBtn').disabled=false}
+}
+$('loginBtn').addEventListener('click',loginWithCredentials);$('password').addEventListener('keydown',e=>{if(e.key==='Enter')loginWithCredentials()});
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));$('logoutBtn').addEventListener('click',logout);$('passwordBtn').addEventListener('click',openPassword);$('cancelPasswordBtn').addEventListener('click',closePassword);$('changePasswordBtn').addEventListener('click',changePassword);$('passwordModal').addEventListener('click',e=>{if(e.target===$('passwordModal'))closePassword()});
+if(auth){api('orders').then(async()=>{$('login').classList.add('hidden');$('app').classList.remove('hidden');await load();show('overview')}).catch(()=>{localStorage.removeItem('pxm_admin_auth');auth=''})}
+</script>
+</body>
+</html>
